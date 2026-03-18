@@ -20,8 +20,8 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 from supabase import create_client
 
-url = "YOUR_SUPABASE_URL"
-key = "YOUR_SUPABASE_KEY"
+url = "https://gdckwwozlrhczbvsxrzl.supabase.co"
+key = "sb_publishable_WGukgYeoBzb3eUG2keuCrQ_7jp0BZwm"
 
 supabase = create_client(url, key)
 
