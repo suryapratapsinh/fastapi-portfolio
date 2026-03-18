@@ -17,6 +17,15 @@ templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
+
+from supabase import create_client
+
+url = "YOUR_SUPABASE_URL"
+key = "YOUR_SUPABASE_KEY"
+
+supabase = create_client(url, key)
+
+
 # =============================
 # Home page route
 # =============================
@@ -46,5 +55,23 @@ def receive_contact(
         file.write(f"Email: {email}\n")
         file.write(f"Message: {message}\n")
         file.write("--------------\n")
+
+    return {"message": "Form submitted successfully"}
+
+
+
+
+
+
+@app.post("/contact")
+async def contact(name: str = Form(...), email: str = Form(...), message: str = Form(...)):
+
+    data = {
+        "name": name,
+        "email": email,
+        "message": message
+    }
+
+    supabase.table("contacts").insert(data).execute()
 
     return {"message": "Form submitted successfully"}
