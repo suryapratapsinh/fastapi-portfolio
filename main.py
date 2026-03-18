@@ -43,27 +43,6 @@ def home(request: Request):
 # Contact form submission
 # =============================
 @app.post("/contact")
-def receive_contact(
-        name: str = Form(...),
-        email: str = Form(...),
-        message: str = Form(...)
-):
-
-    # Save data into file
-    with open("messages.txt", "a") as file:
-        file.write(f"Name: {name}\n")
-        file.write(f"Email: {email}\n")
-        file.write(f"Message: {message}\n")
-        file.write("--------------\n")
-
-    return {"message": "Form submitted successfully"}
-
-
-
-
-
-
-@app.post("/contact")
 async def contact(name: str = Form(...), email: str = Form(...), message: str = Form(...)):
 
     data = {
