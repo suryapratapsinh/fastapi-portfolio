@@ -53,6 +53,13 @@ async def contact(name: str = Form(...), email: str = Form(...), message: str = 
 
     response = supabase.table("contacts").insert(data).execute()
  
-    print("SUPABASE RESPONSE:", response) 
+    #print("SUPABASE RESPONSE:", response) 
 
-    return {"message": "Form submitted successfully"}
+    return RedirectResponse(url="/thank-you", status_code=303)
+
+
+
+
+@app.get("/thank-you", response_class=HTMLResponse)
+async def thank_you(request: Request):
+    return templates.TemplateResponse("thankyou.html", {"request": request})
