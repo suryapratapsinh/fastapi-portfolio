@@ -1,62 +1,54 @@
-# Import FastAPI framework
+# main.py
+
+# -----------------------------
+# Imports
+# -----------------------------
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, HTMLResponse
-
-# Create FastAPI app
-app = FastAPI()
-
-# Folder where HTML templates are stored
-templates = Jinja2Templates(directory="templates")
-
-# Mount static folder for CSS
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-
-
 from supabase import create_client
 
-url = "https://gdckwwozlrhczbvsxrzl.supabase.co"
-key = "sb_publishable_WGukgYeoBzb3eUG2keuCrQ_7jp0BZwm"
+# -----------------------------
+# Initialize app and templates
+# -----------------------------
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
+# -----------------------------
+# Supabase client
+# -----------------------------
+url = "https://gdckwwozlrhczbvsxrzl.supabase.co"
+key = "sb_publishable_WGukgYeoBzb3eUG2keuCrQ_7jp0BZwm"  # Use service_role key for full access in backend
 supabase = create_client(url, key)
 
+# -----------------------------
+# Home page
+# -----------------------------
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
-# =============================
-# Home page route
-# =============================
-@app.get("/")
-def home(request: Request):
-
-    # Render index.html page
-    return templates.TemplateResponse(
-        "index.html",
-        {"request": request}
-    )
-
-
-# =============================
+# -----------------------------
 # Contact form submission
-# =============================
+# -----------------------------
 @app.post("/contact")
 async def contact(name: str = Form(...), email: str = Form(...), message: str = Form(...)):
 
-    data = {
+    # Save data to Supabase
+    supabase.table("contacts").insert({
         "name": name,
         "email": email,
         "message": message
-    }
+    }).execute()
 
-    supabase.table("contacts").insert(data).execute()
- 
-    #print("SUPABASE RESPONSE:", response) 
-
+    # Redirect to thank you page
     return RedirectResponse(url="/thank-you", status_code=303)
 
-
-
-
+# -----------------------------
+# Thank You page
+# -----------------------------
 @app.get("/thank-you", response_class=HTMLResponse)
 async def thank_you(request: Request):
     return templates.TemplateResponse("thankyou.html", {"request": request})
