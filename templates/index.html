@@ -182,6 +182,16 @@ currencies using real-time API data.
 
 </footer>
 
+ <script>
+        const form = document.querySelector(".contact-form");
+        const submitBtn = document.getElementById("submit-btn");
+
+        form.addEventListener("submit", function () {
+            submitBtn.disabled = true; // disable button
+            submitBtn.innerText = "Sending..."; // optional: show feedback
+        });
+</script>
+
 </body>
 
 
