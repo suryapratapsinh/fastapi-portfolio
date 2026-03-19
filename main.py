@@ -1,11 +1,8 @@
 # Import FastAPI framework
 from fastapi import FastAPI, Request, Form
-
-# Used for rendering HTML templates
 from fastapi.templating import Jinja2Templates
-
-# Used for serving CSS files
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse, HTMLResponse
 
 # Create FastAPI app
 app = FastAPI()
