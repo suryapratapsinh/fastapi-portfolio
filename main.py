@@ -51,7 +51,7 @@ async def contact(name: str = Form(...), email: str = Form(...), message: str = 
         "message": message
     }
 
-    response = supabase.table("contacts").insert(data).execute()
+    supabase.table("contacts").insert(data).execute()
  
     #print("SUPABASE RESPONSE:", response) 
 
